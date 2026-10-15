@@ -27,6 +27,8 @@ def global_to_shared(smem, pointer, mask=None, other=None, cache_modifier="", _s
         smem.shape == pointer.shape, lambda:
         f"expected smem shape to match pointer shape but got smem.shape = {smem.shape}, pointer.shape = {pointer.shape}"
     )
+    _check(smem.dtype == pointer.dtype.element_ty,
+           lambda: f"expected smem dtype {smem.dtype} to match pointer element type {pointer.dtype.element_ty}")
     mask = _unwrap_if_constexpr(mask)
     if mask is not None:
         pointer, mask = _semantic.broadcast_impl_value(pointer, mask)
@@ -63,6 +65,8 @@ def shared_to_global(pointer, smem, mask=None, cache_modifier="", _semantic=None
         smem.shape == pointer.shape, lambda:
         f"expected smem shape to match pointer shape but got smem.shape = {smem.shape}, pointer.shape = {pointer.shape}"
     )
+    _check(smem.dtype == pointer.dtype.element_ty,
+           lambda: f"expected smem dtype {smem.dtype} to match pointer element type {pointer.dtype.element_ty}")
     mask = _unwrap_if_constexpr(mask)
     if mask is not None:
         pointer, mask = _semantic.broadcast_impl_value(pointer, mask)
